@@ -1,0 +1,52 @@
+<h1>Listing recipes</h1>
+
+Filter by:
+<% Recipe::CATEGORIES.each do |category| %>
+  <%= link_to category, recipes_path(category: category) %>
+<% end %>
+<br/><br/>
+
+Search by ingredient:
+<%= form_tag recipes_path, method: :get do |f| %>
+<%= text_field_tag(:ingredients, params[:ingredients]) %>
+<%= submit_tag 'Search' %>
+<% end %>
+<br/>
+
+Filter by max preparation time:
+<% [30, 60, 90, 120].each do |time| %>
+  <%= link_to "<#{time}",  recipes_path(max_preparation_time: time) %>
+<% end %>
+<br/>
+
+<table>
+  <thead>
+    <tr>
+      <th>Title</th>
+      <th>Description</th>
+      <th>Categories</th>
+      <th>Properties</th>
+      <th>Ingredients</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @recipes.each do |recipe| %>
+      <tr>
+        <td><%= recipe.title %></td>
+        <td><%= recipe.description %></td>
+        <td><%= recipe.categories %></td>
+        <td><%= recipe.properties %></td>
+        <td><%= recipe.ingredients %></td>
+        <td><%= link_to 'Show', recipe %></td>
+        <td><%= link_to 'Edit', edit_recipe_path(recipe) %></td>
+        <td><%= link_to 'Destroy', recipe, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Recipe', new_recipe_path %>

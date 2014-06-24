@@ -1,0 +1,44 @@
+<%= form_for(@recipe) do |f| %>
+  <% if @recipe.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@recipe.errors.count, "error") %> prohibited this recipe from being saved:</h2>
+
+      <ul>
+      <% @recipe.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :title %><br>
+    <%= f.text_field :title %>
+  </div>
+  <div class="field">
+    <%= f.label :description %><br>
+    <%= f.text_field :description %>
+  </div>
+  <div class="field">
+    <%= f.label :categories %><br>
+    <%= f.select :categories, Recipe::CATEGORIES, {:prompt => "Please select"}, multiple: true, size: 3 %>
+  </div>
+  <div class="field">
+    <%= f.label :ingredients %><br>
+    <% f.object.ingredients.try(:each) do |ingredient| %>
+        <%= text_field_tag "recipe[ingredients][]", ingredient %><br>
+    <% end %>
+  </div>
+
+  <% props = f.object.properties %>
+  <% RecipeProperties::PROPERTIES.each do |property| %>
+    <div class="field">
+      <%= label_tag property.to_s.humanize %><br>
+      <%= text_field_tag "recipe[properties][#{property}]", props.send(property) %>
+    </div>
+  <% end %>
+
+    <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>
